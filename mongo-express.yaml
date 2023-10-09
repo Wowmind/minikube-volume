@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: mongo-express
+        image: mongo-express
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8081
+        volumeMounts:
+          - mountPath: /storage/space/file
+            name: mystorage
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            valueFrom:
+              secretKeyRef:
+                key: mongo-root-user
+                name: mysecret
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: mongo-root-password
+                name: mysecret
+          - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: database-url
+                name: config
+      volumes:
+        - name: mystorage
+          persistentVolumeClaim:
+            claimName: mypvcc
+                 
+      
