@@ -23,7 +23,7 @@ spec:
         - containerPort: 27017
         volumeMounts:
           - mountPath: /storage/space/etc
-            name: mystorage
+            name: demo-storage
         env:
           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
             valueFrom:
@@ -36,7 +36,7 @@ spec:
                 key: mongo-root-password
                 name: mysecret
       volumes:
-        - name: mystorage
+        - name: demo-storage 
           persistentVolumeClaim:
             claimName: mypvcc
 
